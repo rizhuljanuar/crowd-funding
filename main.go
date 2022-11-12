@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crowd-funding/auth"
 	"crowd-funding/handler"
 	"crowd-funding/user"
 	"github.com/gin-gonic/gin"
@@ -21,8 +22,8 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	userService.SaveAvatar(1, "images/1-png")
-	userHandler := handler.NewUserHandler(userService)
+	authService := auth.NewService()
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
