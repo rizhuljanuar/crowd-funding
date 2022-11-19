@@ -2,9 +2,11 @@ package main
 
 import (
 	"crowd-funding/auth"
+	"crowd-funding/campaign"
 	"crowd-funding/handler"
 	"crowd-funding/helper"
 	"crowd-funding/user"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -31,6 +33,19 @@ func main() {
 	// token, err := h.jwtService.GenerateToken()
 
 	userRepository := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+
+	campaigns, err := campaignRepository.FindByUserID(1)
+
+	fmt.Println("debig")
+	fmt.Println(len(campaigns))
+
+	for _, campaign := range campaigns {
+		fmt.Println(campaign.Name)
+		if len(campaign.CampaignImages) > 0 {
+			fmt.Println(campaign.CampaignImages[0].FileName)
+		}
+	}
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 
