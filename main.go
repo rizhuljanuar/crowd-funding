@@ -33,23 +33,14 @@ func main() {
 	// token, err := h.jwtService.GenerateToken()
 
 	userRepository := user.NewRepository(db)
-	campaignRepository := campaign.NewRepository(db)
-
-	campaigns, err := campaignRepository.FindByUserID(1)
-
-	fmt.Println("debig")
-	fmt.Println(len(campaigns))
-
-	for _, campaign := range campaigns {
-		fmt.Println(campaign.Name)
-		if len(campaign.CampaignImages) > 0 {
-			fmt.Println(campaign.CampaignImages[0].FileName)
-		}
-	}
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
-
 	userHandler := handler.NewUserHandler(userService, authService)
+
+	campaignRepository := campaign.NewRepository(db)
+	campaignService := campaign.NewService(campaignRepository)
+	campaigns, _ := campaignService.FindCampaigns(8)
+	fmt.Println(len(campaigns))
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
